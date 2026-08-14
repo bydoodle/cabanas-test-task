@@ -30,8 +30,11 @@ body {
   position: relative;
   margin: 0;
   padding: 0;
+  min-width: 100%;
+  width: max-content;
   background: url(../parchmentBasic.png) 50%;
   min-height: 100vh;
+  height: max-content;
   display: flex;
   align-items: center;
   justify-content: center;

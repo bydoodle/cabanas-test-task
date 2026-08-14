@@ -1,13 +1,42 @@
 import { guests } from "./guests";
 import { getMap } from "./map";
 
+const bookedByGuest = new Set<string>();
+
+function normalizeName(name: string): string[] {
+    return name
+            .trim()
+            .toLowerCase()
+            .split(/\s+/)
+            .filter(Boolean);
+}
+
+function namesMatch(inputName: string, guestName: string): boolean {
+    const inputParts = normalizeName(inputName);
+    const guestParts = normalizeName(guestName);
+
+    if (inputParts.length !== 2 || guestParts.length !== 2) {
+        return false;
+    }
+
+    const normalOrder = 
+        inputParts[0] === guestParts[0] &&
+        inputParts[1] === guestParts[1];
+
+    const reverseOrder =
+        inputParts[0] === guestParts[1] &&
+        inputParts[1] === guestParts[0];
+
+    return normalOrder || reverseOrder;
+}
+
 export function bookCabana(data) {
 
     const { guestName, room, cabanaId } = data;
 
     const guest = guests.find(
         g => g.room === room &&
-             g.guestName === guestName
+             namesMatch(guestName, g.guestName)
     );
 
 
@@ -15,6 +44,13 @@ export function bookCabana(data) {
         return {
             success: false,
             message: "Invalid room number or guest name"
+        };
+    }
+
+    if (bookedByGuest.has(room)) {
+        return {
+            success: false,
+            message: "You have already booked a cabana"
         };
     }
 
@@ -44,6 +80,7 @@ export function bookCabana(data) {
 
     cabana.available = false;
 
+    bookedByGuest.add(room);
 
     return {
         success: true,

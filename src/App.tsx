@@ -98,6 +98,57 @@ function App() {
     setRows(data.rows);
   }
 
+  function renderTile(cell: Tile, x: number, y: number) {
+    switch (cell.type) {
+      case "empty":
+        return (
+          <div
+            key={`${x}-${y}`}
+            className="tile"
+          />
+        );
+
+      case "path":
+        return (
+          <img
+            key={`${x}-${y}`}
+            src={images[
+              cell.type +
+              cell.shape[0][0].toUpperCase() +
+              cell.shape[0].slice(1)
+            ]}
+            className={`tile rotate-${cell.shape[1]}`}
+            alt="path"
+          />
+        );
+
+      case "cabana":
+        return (
+          <img
+            key={`${x}-${y}`}
+            src={images.cabana}
+            className={`tile cabana ${
+              cell.available ? "" : "booked-cabana"
+            }`}
+            onClick={(e) =>
+              bookingWindowPos(e.currentTarget, cell.id)
+            }
+            alt="cabana"
+          />
+        );
+
+      default:
+        return (
+          <img
+            key={`${x}-${y}`}
+            src={images[cell.type]}
+            className="tile"
+            alt={cell.type}
+          />
+        );
+    }
+  }
+
   function bookCabana(e: React.FormEvent) {
     e.preventDefault();
 
@@ -164,39 +215,12 @@ function App() {
           </Stack>
         </Box>
         {rows.map((row, y) => (
-          <div className='row' key={y}>
-            {[...row].map((cell, x) => 
-            cell.type === 'empty' ? (
-              <div
-                key={`${x}-${y}`}
-                className='tile'
-              >
-              </div>
-            ) : (
-              cell.type === 'path' ? (
-                <img
-                  src={images[cell.type + cell.shape[0][0].toUpperCase() + cell.shape[0].slice(1)]}
-                  key={`${x}-${y}`}
-                  className={`tile rotate-${cell.shape[1]}`}
-                />
-              ) : (
-                cell.type === 'cabana' ? (
-                  <img
-                    src={images[cell.type]}
-                    className={`tile cabana ${cell.available ? '' : 'booked-cabana'}`}
-                    onClick={(e) => bookingWindowPos(e.currentTarget, cell.id)}
-                  />
-                ) : (
-              <img
-                src={images[cell.type]}
-                className='tile'
-                key={`${x}-${y}`}
-                alt={cell}
-              />
-            ))))}
+          <div className="row" key={y}>
+            {row.map((cell, x) =>
+              renderTile(cell, x, y)
+            )}
           </div>
         ))}
-        <script src='input.js'></script>
       </div>
     </>
   )
