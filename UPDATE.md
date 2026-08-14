@@ -1,6 +1,6 @@
 # 1. Two extra assets
 
-I added two extra assets. I didn't change anything regarding the water texture — it is still ignored, while the parchment texture is used as the background.
+I didn't change anything regarding the water texture — it is still ignored, while the parchment texture is used as the background.
 
 # 2. One-side chalet
 
